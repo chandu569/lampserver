@@ -7,37 +7,24 @@
         name: apache2
         state: present
         update_cache: yes
-    - name: install php package
+    - name: installing php,libapache2-mod-php,php-mcrypt,php-mysql,apache2
       apt:
-        name: php
+        name: "{{ item }}"
         state: present
-    - name: install libapache2-mod-php
-      apt:
-        name: libapache2-mod-php
-        state: present
-    - name: install php-mysql
-      apt:
-        name: php-mysql
-        state: present
-    - name: install php-mcrypt
-      apt:
-        name: php-mcrypt
-        state: present
-    - name: install php-mysql
-      apt:
-        name: php-mysql
-        state: present
-    - name: restarted apache2
+        update_cache: yes 
+      loops:
+        - php
+        - libapache2-mod-php
+        - php-mysql
+        - php-mcrypt
+        - php-cli
+    - name: restart apache
       service:
         name: apache2
-        enabled: yes
         state: restarted
-    - name: install php cli
-      apt:
-        name: php-cli
-        state: present
+        enabled: yes
     - name: copy info.php
       copy:
         src: info.php
         dest: /var/www/html/info.php
-        
+  
